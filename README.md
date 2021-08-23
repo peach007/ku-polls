@@ -2,7 +2,7 @@
 
 A web application for conducting polls at [Kasetsart University](https://www.ku.ac.th).
 
-## [Project Documents]
+## Project Documents
 
 [Project Wiki](../../wiki/Home)
 
