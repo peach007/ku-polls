@@ -17,6 +17,6 @@ SurveyMonkey has limits on free forms, including the number of survey items and 
 
 ## Project Documents
 
-[Project Wiki](../../wiki/Home)
+[Wiki Home](../../wiki/Home)
 
 [Vision Statement](../../wiki/Vision%20Statement)
