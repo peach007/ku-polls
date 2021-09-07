@@ -20,6 +20,14 @@ class Question(models.Model):
     was_published_recently.admin_order_field = 'pub_date'
     was_published_recently.boolean = True
     was_published_recently.short_description = 'Published recently?'
+
+    def is_published(self):
+        now = timezone.now()
+        return now >= self.pub_date
+
+    def can_vote(self):
+        now = timezone.now()
+        return (now < self.end_date) and self.is_published()
         
 
 
