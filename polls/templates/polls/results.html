@@ -1,9 +1,14 @@
 <h1>{{ question.question_text }}</h1>
 
-<ul>
+<table>
+    <th width="30%" bgcolor="FA8072">Choice</th>
+    <th width="20%" bgcolor="FFA07A">Votes</th>
 {% for choice in question.choice_set.all %}
-    <li>{{ choice.choice_text }} -- {{ choice.votes }} vote{{ choice.votes|pluralize }}</li>
+    <tr>
+        <td>{{ choice.choice_text }}</td>
+        <td>{{   choice.votes }}</td>
 {% endfor %}
 </ul>
 
 <a href="{% url 'polls:detail' question.id %}">Vote again?</a>
+<br/><a href="{% url 'polls:index' %}">Back to List of Polls</a>
