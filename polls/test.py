@@ -1,20 +1,10 @@
 import datetime
-from django.db.models.query_utils import Q
+
 from django.test import TestCase
 from django.utils import timezone
 from django.urls import reverse
 from .models import Question
-from django.http import response
 
-def create_question(question_text, days):
-        """
-        Create a question with the given `question_text` and published the
-        given number of `days` offset to now (negative for questions published
-        in the past, positive for questions that have yet to be published).
-        """
-        time = timezone.now() + datetime.timedelta(days=days)
-        return Question.objects.create(question_text=question_text, pub_date=time)
-        
 class QuestionModelTest(TestCase):
     def test_was_publish_recently_with_future_question(self):
         """
@@ -42,6 +32,75 @@ class QuestionModelTest(TestCase):
         time = timezone.now() - datetime.timedelta(hours=23, minutes=59, seconds=59)
         recent_question = Question(pub_date=time)
         self.assertIs(recent_question.was_published_recently(), True)
+
+    def test_is_published_with_published(self):
+        """
+        iS_published() return true for question whose already published.
+        """
+        time = timezone.now()
+        published_time = time - datetime.timedelta(days=1)
+        question = Question(pub_date=published_time)
+        self.assertIs(question.is_published(), True)
+
+    def test_is_published_with_not_published(self):
+        """
+        iS_published() return false for question whose not already published.
+        """
+        time = timezone.now()
+        published_time = time + datetime.timedelta(days=1)
+        question = Question(pub_date=published_time)
+        self.assertIs(question.is_published(), False)
+       
+
+    def test_can_vote_before_published(self):
+        """
+        can_vote returns false for the question that not already published.
+        """
+        time = timezone.now()
+        published_time = time + datetime.timedelta(days=1)
+        closed_time = time + datetime.timedelta(days=2)
+        question = Question(pub_date=published_time, end_date=closed_time)
+        self.assertIs(question.can_vote(), False)
+
+    def test_can_vote_after_closed(self):
+        """
+        can_vote returns false for the question that already closed.
+        """
+        time = timezone.now()
+        published_time = time - datetime.timedelta(days=2)
+        closed_time = time - datetime.timedelta(days=1)
+        question = Question(pub_date=published_time, end_date=closed_time)
+        self.assertIs(question.can_vote(), False)
+
+    def test_can_vote_between_published_and_closed(self):
+        """
+        can_vote return true for the question that already published but 
+        not closed.
+        """
+        time = timezone.now()
+        published_time = time - datetime.timedelta(days=1)
+        closed_time = time + datetime.timedelta(days=1)
+        question = Question(pub_date=published_time, end_date=closed_time)
+        self.assertIs(question.can_vote(), True)
+
+
+
+
+
+
+
+
+
+
+
+def create_question(question_text, days):
+        """
+        Create a question with the given `question_text` and published the
+        given number of `days` offset to now (negative for questions published
+        in the past, positive for questions that have yet to be published).
+        """
+        time = timezone.now() + datetime.timedelta(days=days)
+        return Question.objects.create(question_text=question_text, pub_date=time)
 
 
 class QuestionIndexViewTests(TestCase):
