@@ -37,12 +37,12 @@ class DetailView(generic.DetailView):
         try:
             question = Question.objects.get(pk=kwargs['pk'])
             if not question.can_vote():
-                messages.error(request, "You are not allow to vote")
+                messages.error(request, "You are not allow to vote.")
                 return HttpResponseRedirect(reverse('polls:index'))
             self.object = self.get_object()
-            return self.render_to_response(self.get_context_data(object=self.get_object))
+            return self.render_to_response(self.get_context_data(object=self.get_object()))
         except:
-            messages.error(request, "No polls exist")
+            messages.error(request, "No polls exist.")
             return HttpResponseRedirect(reverse('polls:index'))
 
 
